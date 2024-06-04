@@ -11,3 +11,16 @@ This software has been tested with Wordpress, and it works as intended as long a
 **Note: I am not responsible for anything that you choose do with it, and this file is MIT Licensed** - but if you find any bugs or issues feel free to open a ticket!
 
 ## How do I deploy this on my NixOS / Nix Server?
+
+There are a number of ways you can add this to your NixOS / Nix server. Namely:
+
+1. Copy & Paste the content of LCMP.nix into your configuration.nix
+2. Import LCMP.nix into your Nix file directory (usually /etc/nixos) and add it to your list of imports like so:
+
+   ```
+   imports = [
+    ./hardware-configuration.nix
+    ./LCMP.nix
+    # Other imported .nix files go here
+    ];
+   ```
