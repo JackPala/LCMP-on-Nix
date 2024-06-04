@@ -24,3 +24,20 @@ There are a number of ways you can add this to your NixOS / Nix server. Namely:
     # Other imported .nix files go here
     ];
    ```
+Once you have the file imported as intended thru your preferred method, you will need to set the following values:
+
+1. Your Virtualhost URL - This is set as example.com inside of LCMP.nix but you will need to set it to your website or webapp's URL so Caddy can setup automatic SSL
+2. Your files directory - This is set as /var/www/example but you will need to set it to your website or webapps files folder. For wordpress, this would be the location of your wordpress install - the directory where your wp-config.php files and whatnot usually live.
+
+Note, you can add as many virtualhosts as you'd like, by adding them to the caddy section. NixOS's official wiki has good instructions on that [here](https://nixos.wiki/wiki/Caddy)
+
+## Post deployment instructions
+
+You will need to create whatever database you require for your webapp, you can do this as root with `mysql -u root -p` and then hit enter (make sure to set your mysql password for security)
+
+You will also need to set your webapp folder's and file permissions appropiately depending on what it is (Wordpress, Drupal, etc), this is outside of the scope of this file but there are plenty of scripts online that handle this for your specific use case.
+
+
+
+
+
