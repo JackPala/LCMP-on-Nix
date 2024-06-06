@@ -34,6 +34,12 @@
     phpPackage = pkgs.php81;
     user = "www-data";
     group = "www-data";
+    phpOptions = ''
+        upload_max_filesize = 64M
+        post_max_size = 64M
+        max_execution_time = 300
+        max_input_time = 300
+    '';
     settings = {
       "pm" = "dynamic";
       "pm.max_children" = 75;
