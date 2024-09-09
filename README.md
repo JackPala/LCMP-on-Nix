@@ -37,6 +37,41 @@ You will need to create whatever database you require for your webapp, you can d
 
 You will also need to set your webapp folder's and file permissions appropiately depending on what it is (Wordpress, Drupal, etc), this is outside of the scope of this file but there are plenty of scripts online that handle this for your specific use case.
 
+## www and non-www congruency
+
+If the site you are hosting has a www subdomain, and also no subdomain (like google.com and www.google.com, for example), then making it work with this conf is easy. You would edit it as follows
+
+For a single domain or subdomain you have this:
+
+```
+    virtualHosts."example.com" = {
+    extraConfig = ''
+      root    * /var/www/example
+      file_server
+      php_fastcgi unix/var/run/phpfpm/caddy.sock
+    '';
+```
+
+But if you want www.example.com to work as well, you simply need to copy the virtualhost and append www to the hostname like so:
+
+```
+    virtualHosts."example.com" = {
+    extraConfig = ''
+      root    * /var/www/example
+      file_server
+      php_fastcgi unix/var/run/phpfpm/caddy.sock
+    '';
+    virtualHosts."www.example.com" = {
+    extraConfig = ''
+      root    * /var/www/example
+      file_server
+      php_fastcgi unix/var/run/phpfpm/caddy.sock
+    '';
+```
+
+Since they are both creating a PHP-fpm instance in this context, and they are both running independent virtualhosts that point to the same folder, you will have two SSL certs, a non-www cert, and a www cert. This will help prevent issues if you have any odd redirects to your server. Users can then access the www or non-www version of your site as normal.
+
+
 
 
 
