@@ -72,7 +72,40 @@ But if you want www.example.com to work as well, you simply need to copy the vir
 Since they are both creating a PHP-fpm instance in this context, and they are both running independent virtualhosts that point to the same folder, you will have two SSL certs, a non-www cert, and a www cert. This will help prevent issues if you have any odd redirects to your server. Users can then access the www or non-www version of your site as normal.
 
 
+## Handling Wordpress Multisite Networks
 
+If you are using Wordpress multisite bridging, also known as a "Wordpress Network" (If you are unsure, you are not using it) then there are special entries that need to be made to the file to permit the handling of the required redirects within the multisite bridge, since Caddy does not use .htaccess files. The specific line that needs to be added to your virtualhost is this:
 
+```
+uri path_regexp ^/[a-zA-Z0-9]+/wp- /wp-
+```
 
+That means, a site virtualhost in LCMP-on-Nix with Wordpress Multisite Networking setup would look something like this:
+
+```
+  # Caddy Webserver with PHP-FPM
+  services.caddy = {
+    enable = true;
+    user = "www-data";
+    group = "www-data";
+    virtualHosts."test.com" = {
+    extraConfig = ''
+      root    * /var/www/test
+      uri path_regexp ^/[a-zA-Z0-9]+/wp- /wp-
+      file_server
+      php_fastcgi unix/var/run/phpfpm/caddy.sock
+    '';
+    };
+    virtualHosts."www.test.com" = {
+    extraConfig = ''
+      root    * /var/www/test
+      uri path_regexp ^/[a-zA-Z0-9]+/wp- /wp-
+      file_server
+      php_fastcgi unix/var/run/phpfpm/caddy.sock
+    '';
+    };
+  };
+```
+
+This allows for the full routing required in a standard Wordpress Multisite network.
 
